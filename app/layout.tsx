@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AppLayout } from '@/components/app-layout'
-import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
@@ -33,17 +32,10 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className='font-sans antialiased bg-background text-foreground'>
         <Toaster richColors />
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AppLayout>
-            {children}
-            {process.env.NODE_ENV === 'production' && <Analytics />}
-          </AppLayout>
-        </ThemeProvider>
+        <AppLayout>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </AppLayout>
       </body>
     </html>
   )

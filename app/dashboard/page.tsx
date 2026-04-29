@@ -165,8 +165,8 @@ export default function DashboardPage() {
   return (
     <main className='mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
       <div className='space-y-8'>
-        <div className='flex items-center justify-between'>
-          <div>
+        <div className='flex flex-col gap-4 md:flex-row items-center justify-between'>
+          <div className='text-center md:text-left'>
             <h1 className='text-3xl font-bold text-foreground'>
               Analyze With AI
             </h1>
@@ -175,7 +175,7 @@ export default function DashboardPage() {
             </p>
           </div>
           {/* Model Selection */}
-          <div className='flex items-center justify-end gap-4'>
+          <div className='flex items-center md:justify-end gap-4'>
             <p className='text-sm font-medium text-foreground'>AI Model:</p>
             <Select
               value={selectedModel}

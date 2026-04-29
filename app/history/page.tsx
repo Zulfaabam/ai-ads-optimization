@@ -134,7 +134,7 @@ export default function HistoryPage() {
   return (
     <main className='mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8'>
       <div>
-        <div className='mb-8'>
+        <div className='mb-8 text-center md:text-left'>
           <h1 className='text-3xl font-bold text-foreground'>
             Analysis History
           </h1>
@@ -273,9 +273,9 @@ export default function HistoryPage() {
             <div className='space-y-8 py-4'>
               <div
                 ref={targetRef}
-                className='space-y-8 bg-background rounded-xl'
+                className='space-y-8 bg-background rounded-xl md:p-4'
               >
-                <div className='flex justify-between items-center'>
+                <div className='flex flex-col md:flex-row gap-2 justify-between md:items-center'>
                   <div className='mb-2'>
                     <h1 className='text-xl md:text-3xl font-bold'>
                       AI Ads Optimization Report
@@ -285,7 +285,11 @@ export default function HistoryPage() {
                       {new Date(selectedAnalysis.created_at).toLocaleString()}
                     </p>
                   </div>
-                  <Button onClick={() => toPDF()} variant='default'>
+                  <Button
+                    onClick={() => toPDF()}
+                    variant='default'
+                    className='mr-auto md:m-0'
+                  >
                     <Download className='mr-2 h-4 w-4' />
                     Export PDF
                   </Button>
