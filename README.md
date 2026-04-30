@@ -47,6 +47,7 @@ Sample campaign,Facebook,8000,320,85.00,22,0,2026-04-01 to 2026-04-07
 - Node.js 18+
 - Supabase account
 - OpenAI API key
+- Google Gemini API key
 
 ### Installation
 
