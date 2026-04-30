@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -11,6 +10,8 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Spinner } from '@/components/ui/spinner'
+import { UploadCloud, CheckCircle2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface CSVUploaderProps {
   onFileLoad: (csvData: string) => Promise<void>
@@ -20,14 +21,24 @@ interface CSVUploaderProps {
 export function CSVUploader({ onFileLoad, isLoading }: CSVUploaderProps) {
   const [fileName, setFileName] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0]
+    processFile(file)
+  }
+
+  const processFile = async (file: File | undefined) => {
     if (!file) {
       setFileName('')
+      return
+    }
+
+    if (!file.name.endsWith('.csv')) {
+      setError('Please upload a CSV file.')
       return
     }
 
@@ -42,18 +53,20 @@ export function CSVUploader({ onFileLoad, isLoading }: CSVUploaderProps) {
     }
   }
 
-  const handleReload = async () => {
-    const file = fileInputRef.current?.files?.[0]
-    if (!file) return
+  const onDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
 
-    setError('')
+  const onDragLeave = () => {
+    setIsDragging(false)
+  }
 
-    try {
-      const text = await file.text()
-      await onFileLoad(text)
-    } catch (err) {
-      setError(`Failed to read file: ${String(err)}`)
-    }
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const file = e.dataTransfer.files?.[0]
+    processFile(file)
   }
 
   return (
@@ -74,24 +87,70 @@ export function CSVUploader({ onFileLoad, isLoading }: CSVUploaderProps) {
       </CardHeader>
       <CardContent>
         <div className='space-y-4'>
-          <div className='flex items-center gap-4'>
+          <div
+            className={cn(
+              'relative group cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 ease-in-out py-12 flex flex-col items-center justify-center gap-4 bg-muted/30 hover:bg-muted/50',
+              isDragging
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:border-primary/50',
+              isLoading && 'opacity-50 cursor-not-allowed',
+            )}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            onClick={() => !isLoading && fileInputRef.current?.click()}
+          >
             <Input
               ref={fileInputRef}
               type='file'
               accept='.csv'
               onChange={handleFileChange}
               onClick={(e) => {
-                // Reset the input value so selecting the same file triggers onChange again
+                e.stopPropagation()
                 e.currentTarget.value = ''
               }}
               disabled={isLoading}
-              className='border-border cursor-pointer'
+              className='hidden'
             />
-            {fileName && !isLoading && (
-              <span className='ml-auto text-right text-sm text-muted-foreground md:min-w-50'>
-                ✓ {fileName}
-              </span>
-            )}
+
+            <div
+              className={cn(
+                'p-4 rounded-full bg-background border border-border shadow-sm transition-transform duration-200 group-hover:scale-110',
+                isDragging && 'scale-110 border-primary shadow-primary/20',
+              )}
+            >
+              <UploadCloud
+                className={cn(
+                  'h-8 w-8 text-muted-foreground transition-colors duration-200',
+                  isDragging && 'text-primary',
+                  'group-hover:text-primary',
+                )}
+              />
+            </div>
+
+            <div className='text-center space-y-1 px-4'>
+              <p className='text-base font-semibold text-foreground'>
+                {fileName ? (
+                  <span className='flex items-center gap-2 justify-center'>
+                    <CheckCircle2 className='h-4 w-4 text-accent' />
+                    {fileName}
+                  </span>
+                ) : (
+                  <span className='flex flex-col gap-1'>
+                    <span className='text-lg font-medium text-foreground'>
+                      Ready to analyze?
+                    </span>
+                    <span className='text-muted-foreground'>
+                      Click to upload or drag and drop a CSV file <br />
+                      to get started with AI-powered ad optimization.
+                    </span>
+                  </span>
+                )}
+              </p>
+              <p className='text-sm text-muted-foreground'>
+                CSV file (Max. 10MB)
+              </p>
+            </div>
           </div>
 
           {error && (

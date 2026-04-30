@@ -208,15 +208,6 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
               <p className='text-sm text-destructive'>{error}</p>
-              {/* {rawCsvData && (
-                <Button
-                  variant='destructive'
-                  onClick={handleAnalyze}
-                  disabled={isLoading}
-                >
-                  Retry Analysis
-                </Button>
-              )} */}
             </CardContent>
           </Card>
         )}
@@ -331,21 +322,6 @@ export default function DashboardPage() {
               </Button>
             </div>
           </div>
-        )}
-
-        {/* Empty State */}
-        {!analysisResult && !isLoading && !error && parsedRows.length === 0 && (
-          <Card className='border-border/50 bg-secondary/30 text-center'>
-            <CardContent className='py-12'>
-              <h3 className='mb-2 text-lg font-medium text-foreground'>
-                Ready to analyze?
-              </h3>
-              <p className='text-muted-foreground'>
-                Upload a CSV file above to get started with AI-powered ad
-                optimization
-              </p>
-            </CardContent>
-          </Card>
         )}
       </div>
     </main>
