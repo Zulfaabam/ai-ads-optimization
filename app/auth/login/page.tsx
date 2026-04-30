@@ -45,7 +45,15 @@ export default function Page() {
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              AI Ads Optimizer
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Maximize your campaign performance with AI
+            </p>
+          </div>
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Login</CardTitle>
